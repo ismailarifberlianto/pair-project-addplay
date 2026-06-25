@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasOne(models.Profile);
+      User.belongsTo(models.Profile);
       User.hasMany(models.Playlist);
       User.belongsToMany(models.Playlist, { through: 'LikedPlaylists', timestamps: false });
     }
@@ -46,28 +46,20 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Please enter password',
         },
         len: {
-          args: [6],
-          msg: 'Please input min 6 characters of password'
+          args: [8],
+          msg: 'Please input min 8 characters of password'
         }
       },
     },
-    role: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: 'Please enter role',
-        },
-        notEmpty: {
-          msg: 'Please enter role',
-        }
-      },
-    }
+    role: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',
   });
   User.beforeCreate((user) => {
+    if(!user.role){
+      user.role = 'user'
+    }
     user.password = bcrypt.hashSync(user.password, 10)
   })
   User.beforeUpdate((user) => {

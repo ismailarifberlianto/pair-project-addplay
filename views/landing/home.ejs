@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddPlay - Your Playlists</title>
+    <!-- Font Awesome for beautiful minimalist icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- RESET & VARIABLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --main-sky-blue: #7cd0ff;
+            --light-sky: #e6f7ff;
+            --dark-blue: #006699;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-app: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --danger-red: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* --- HEADER SECTION --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-blue);
+        }
+
+        .logo i {
+            color: var(--main-sky-blue);
+        }
+
+        /* --- USER MENU & PROFILE DROPDOWN --- */
+        .user-menu-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-profile-btn:hover {
+            border-color: var(--main-sky-blue);
+            background-color: var(--light-sky);
+        }
+
+        .avatar-circle {
+            width: 28px;
+            height: 28px;
+            background-color: var(--main-sky-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .username-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        /* Dropdown Menu List */
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 110%;
+            width: 160px;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            list-style: none;
+            overflow: hidden;
+            z-index: 100;
+            display: none;
+        }
+
+        /* Show dropdown on hover */
+        .user-menu-wrapper:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item a, .dropdown-item button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 14px;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item a:hover, .dropdown-item button:hover {
+            background-color: var(--light-sky);
+            color: var(--dark-blue);
+        }
+
+        .dropdown-item.logout-border {
+            border-top: 1px solid var(--border-color);
+        }
+
+        .dropdown-item.logout-border a, .dropdown-item.logout-border button {
+            color: var(--danger-red);
+        }
+
+        .dropdown-item.logout-border a:hover, .dropdown-item.logout-border button:hover {
+            background-color: #fef2f2;
+            color: var(--danger-red);
+        }
+
+        /* --- MAIN HERO / BANNER --- */
+        .hero-banner {
+            background: linear-gradient(135deg, var(--light-sky) 0%, #b3e5ff 100%);
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 26px;
+            color: var(--dark-blue);
+            margin-bottom: 6px;
+        }
+
+        .hero-text p {
+            font-size: 14px;
+            color: #334155;
+        }
+
+        /* --- SECTION CONTROLS --- */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Create Playlist Form */
+        .add-playlist-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-playlist {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 14px;
+            width: 240px;
+            transition: all 0.3s ease;
+        }
+
+        .input-playlist:focus {
+            outline: none;
+            border-color: var(--main-sky-blue);
+            box-shadow: 0 0 0 3px var(--light-sky);
+        }
+
+        .btn-add-playlist {
+            padding: 10px 20px;
+            background-color: var(--main-sky-blue);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-add-playlist:hover {
+            background-color: #5bc0f8;
+        }
+
+        /* --- PLAYLIST GRID --- */
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .playlist-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .playlist-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--main-sky-blue);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .playlist-cover {
+            width: 100%;
+            aspect-ratio: 1;
+            background-color: var(--light-sky);
+            border-radius: 10px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--dark-blue);
+            font-size: 48px;
+        }
+
+        .playlist-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .playlist-count {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- ================= HEADER & PROFILE NAVIGATION ================= -->
+        <header class="header">
+            <div class="logo">
+                <i class="fa-solid fa-cloud-music"></i>
+                <span>Addplay</span>
+            </div>
+
+            <!-- Profile Dropdown Menu Wrapper -->
+            <div class="user-menu-wrapper">
+                <% if (findUser) { %>
+                <button class="user-profile-btn">
+                    <div class="avatar-circle">
+                        <%= findUser.Profile.username.substring(0,2).toUpperCase() %>
+                    </div>
+                    <span class="username-text">
+                        <%= findUser.Profile.username %>
+                    </span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: var(--text-muted);"></i>
+                </button>
+
+                <!-- Dropdown Items -->
+                <ul class="dropdown-menu">
+                        <li class="dropdown-item">
+                            <a href="/profile"><i class="fa-solid fa-user"></i> Profile</a>
+                        </li>
+                        <li class="dropdown-item logout-border">
+                            <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                        </li>
+                    </ul>
+                <% } else { %>
+                    <a href="/login"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+                <% } %>
+            </div>
+        </header>
+
+        <!-- ================= HERO BANNER ================= -->
+        <section class="hero-banner">
+            <div class="hero-text">
+                <h1>Your Personal Music Space</h1>
+                <p>Organize, curate, and enjoy your favorite music playlists all in one clean place.</p>
+            </div>
+            <div style="font-size: 40px; color: var(--dark-blue); opacity: 0.6;">
+                <i class="fa-solid fa-compact-disc"></i>
+            </div>
+        </section>
+
+        <!-- ================= CONTROLS & NEW PLAYLIST FORM ================= -->
+        <section class="section-header">
+            <h2>Playlist Collection</h2>
+            
+            <!-- Redirects directly to your dedicated add playlist page -->
+            <a href="/playlist/create" class="btn-add-playlist" style="text-decoration: none;">
+                <i class="fa-solid fa-plus"></i> Create Playlist
+            </a>
+        </section>
+
+        <!-- ================= PLAYLIST GRID DISPLAY ================= -->
+        <main class="playlist-grid">
+            
+            <!-- Backend EJS Controller Loop -->
+            <% if (typeof playlists !== 'undefined' && playlists.length > 0) { %>
+                <% playlists.forEach(p => { %>
+                    <a href="/playlist/<%= p.id %>" class="playlist-card">
+                        <div class="playlist-cover">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <div class="playlist-title"><%= p.name %></div>
+                        <div class="playlist-count"><%= p.songsCount || 0 %> Songs</div>
+                    </a>
+                <% }) %>
+            <% } else { %>
+
+                <!-- Fallback empty state when database has no records -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                    <i class="fa-solid fa-folder-open" style="font-size: 48px; margin-bottom: 12px; color: #cbd5e1;"></i>
+                    <p>No playlists found. Create your first playlist above!</p>
+                </div>
+
+            <% } %>
+
+        </main>
+    </div>
+
+</body>
+</html>
