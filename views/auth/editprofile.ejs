@@ -133,12 +133,12 @@
         .select-wrapper {
             position: relative;
             width: 100%;
-            margin-bottom: 20px; /* Samakan dengan .form-group agar rapi */
+            margin-bottom: 20px; 
         }
         select {
             width: 100%;
             padding: 12px 16px;
-            padding-right: 40px; /* Memberi ruang untuk kustom ikon panah */
+            padding-right: 40px; 
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 14px;
@@ -167,24 +167,23 @@
             color: var(--text-main);
             background-color: #ffffff;
             cursor: pointer;
-            appearance: none; /* Menghilangkan panah bawaan OS/Browser asli */
+            appearance: none; 
             -webkit-appearance: none;
             -moz-appearance: none;
-            padding-right: 40px; /* Beri space di kanan agar teks tidak menabrak panah custom */
+            padding-right: 40px; 
         }
 
-        /* 3. Buat panah kustom yang posisinya terkunci di dalam .select-wrapper */
         .select-wrapper::after {
-            content: '\f078'; /* Kode ikon chevron-down Font Awesome */
+            content: '\f078'; 
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             font-size: 12px;
             color: var(--text-muted);
             position: absolute;
             right: 16px;
-            top: 72%; /* Sesuaikan persentase ini agar sejajar vertikal di tengah input select (karena ada label di atasnya) */
+            top: 72%; 
             transform: translateY(-50%);
-            pointer-events: none; /* Klik user menembus langsung ke select */
+            pointer-events: none; 
         }
 
         select option {

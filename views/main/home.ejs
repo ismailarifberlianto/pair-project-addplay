@@ -67,7 +67,7 @@
             background-color: var(--light-sky);
             padding: 6px 14px;
             border-radius: 20px;
-            border: 1px solid #7cd0ff; /* var(--main-sky-blue) */
+            border: 1px solid #7cd0ff; 
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -75,7 +75,7 @@
         }
 
         .nav-item.admin-badge:hover {
-            background-color: #d0f0ff; /* Sedikit lebih gelap saat di-hover */
+            background-color: #d0f0ff; 
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(0, 102, 153, 0.1);
         }
@@ -128,7 +128,7 @@
         .dropdown-menu {
             position: absolute;
             right: 0;
-            top: 110%;
+            top: 105%; 
             width: 160px;
             background-color: white;
             border: 1px solid var(--border-color);
@@ -140,8 +140,12 @@
             display: none;
         }
 
-        /* Show dropdown on hover */
-        .user-menu-wrapper:hover .dropdown-menu {
+        .profile-dropdown-container {
+            position: relative; 
+            display: inline-block;
+        }
+
+        .profile-dropdown-container:hover .dropdown-menu {
             display: block;
         }
 
@@ -366,6 +370,62 @@
             font-size: 13px;
             color: var(--text-muted);
         }
+        .success-alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #f0fdf4; 
+            border: 1px solid #bbf7d0;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+        .success-icon {
+            color: #16a34a; 
+            font-size: 16px;
+        }
+        .success-text {
+            font-size: 14px;
+            color: #16a34a;
+            font-weight: 500;
+        }
+
+        .error-alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #fef2f2; 
+            border: 1px solid #fee2e2;
+            border-left: 4px solid #ef4444; 
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px; 
+            animation: fadeIn 0.3s ease-in-out; 
+        }
+
+        .error-icon {
+            color: #ef4444;
+            font-size: 16px;
+            flex-shrink: 0;  
+        }
+
+        .error-text {
+            color: #991b1b;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -380,7 +440,7 @@
                 <span>Addplay</span>
             </div>
 
-            <div class="user-menu-wrapper" style="display: flex; align-items: center; gap: 16px;">
+            <div class="user-menu-wrapper">
                 <% if (findUser) { %>
                     
                     <% if (findUser.role === 'admin') { %>
@@ -389,24 +449,27 @@
                         </a>
                     <% } %>
 
-                    <button class="user-profile-btn">
-                        <div class="avatar-circle">
-                            <%= findUser.Profile.username.substring(0,2).toUpperCase() %>
-                        </div>
-                        <span class="username-text">
-                            <%= findUser.Profile.username %>
-                        </span>
-                        <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: var(--text-muted);"></i>
-                    </button>
+                    <div class="profile-dropdown-container">
+                        <button class="user-profile-btn">
+                            <div class="avatar-circle">
+                                <%= findUser.Profile.username.substring(0,2).toUpperCase() %>
+                            </div>
+                            <span class="username-text">
+                                <%= findUser.Profile.username %>
+                            </span>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: var(--text-muted);"></i>
+                        </button>
 
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-item">
-                            <a href="/profile"><i class="fa-solid fa-user"></i> Profile</a>
-                        </li>
-                        <li class="dropdown-item logout-border">
-                            <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-                        </li>
-                    </ul>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item">
+                                <a href="/profile"><i class="fa-solid fa-user"></i> Profile</a>
+                            </li>
+                            <li class="dropdown-item logout-border">
+                                <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+
                 <% } else { %>
                     <a href="/login"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
                 <% } %>
@@ -423,6 +486,18 @@
                 <i class="fa-solid fa-compact-disc"></i>
             </div>
         </section>
+        <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+            <div class="success-alert">
+                <i class="fa-solid fa-circle-check success-icon"></i>
+                <div class="success-text"><%= successMessage %></div>
+            </div>
+        <% } %>
+        <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+            <div class="error-alert">
+                <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+                <div class="error-text"><%= errorMessage %></div>
+            </div>
+        <% } %>
 
         <!-- ================= CONTROLS & NEW PLAYLIST FORM ================= -->
         <section class="section-header">
@@ -447,8 +522,8 @@
         <main class="playlist-grid">
 
             <!-- Backend EJS Controller Loop -->
-            <% if (typeof playlists !=='undefined' && playlists.length> 0) { %>
-                <% playlists.forEach(p=> { %>
+            <% if (typeof playlists !== 'undefined' && playlists.length > 0) { %>
+                <% playlists.forEach(p => { %>
                     <a href="/playlist/<%= p.id %>" class="playlist-card">
                         <div class="playlist-cover">
                             <% if (p.imageUrl && p.imageUrl.trim() !== "") { %>
@@ -460,23 +535,24 @@
                         <div class="playlist-title">
                             <%= p.name %>
                         </div>
-                        <div class="playlist-count">
-                            <%= p.songsCount || 0 %> Songs
+                        
+                        <div class="playlist-meta-info" style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                            <div class="playlist-count">
+                                <%= p.totalSong %> Songs
+                            </div>
+                            <div class="playlist-date" style="font-size: 11px; color: var(--text-muted);">
+                                <i class="fa-regular fa-calendar" style="margin-right: 4px;"></i>
+                                <%= createAt(p.createdAt) %>
+                            </div>
                         </div>
                     </a>
-                    <% }) %>
-                        <% } else { %>
-
-                            <!-- Fallback empty state when database has no records -->
-                            <div
-                                style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-                                <i class="fa-solid fa-folder-open"
-                                    style="font-size: 48px; margin-bottom: 12px; color: #cbd5e1;"></i>
-                                <p>No playlists found. Create your first playlist above!</p>
-                            </div>
-
-                            <% } %>
-
+                <% }) %>
+            <% } else { %>
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                    <i class="fa-solid fa-folder-open" style="font-size: 48px; margin-bottom: 12px; color: #cbd5e1;"></i>
+                    <p>No playlists found. Create your first playlist above!</p>
+                </div>
+            <% } %>
         </main>
     </div>
 

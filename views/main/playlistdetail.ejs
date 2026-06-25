@@ -143,15 +143,18 @@
                     <% playlistId.Songs.forEach((song, index) => { %>
                         <li class="track-item">
                             <div class="track-details">
-                                <div class="track-icon">
-                                    <i class="fa-solid fa-play" style="margin-left: 2px; font-size: 11px;"></i>
-                                </div>
+                                <a href="/songs/<%= song.id %>" class="track-icon-link" title="View Song Details">
+                                    <div class="track-icon">
+                                        <i class="fa-solid fa-play" style="margin-left: 2px; font-size: 11px;"></i>
+                                    </div>
+                                </a>
                                 <div>
-                                    <div class="track-title"><%= song.title %></div>
+                                    <div class="track-title">
+                                        <a href="/songs/<%= song.id %>" style="text-decoration: none; color: inherit;"><%= song.title %></a>
+                                    </div>
                                     <div class="track-artist"><%= song.singer || 'Unknown Artist' %></div>
                                 </div>
                             </div>
-                            
                             <% if (typeof currentUser !== 'undefined' && currentUser && (currentUser.id === playlistId.UserId || currentUser.role === 'admin')) { %>
                                 <form action="/playlist/<%= playlistId.id %>/delete_song/<%= song.id %>" method="POST">
                                     <button type="submit" class="btn-delete-track" title="Remove track" onclick="return confirm('Remove this song from playlist?')">

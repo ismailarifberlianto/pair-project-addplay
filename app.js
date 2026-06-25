@@ -30,7 +30,8 @@ app.get('/profile/:id/edit', AuthController.getEditProfileId);
 app.post('/profile/:id/edit', AuthController.postEditProfileId);
 
 // LANDING
-app.get('/', MainController.home);
+app.get('/', MainController.homeHandler);
+app.get('/addplay', MainController.home);
 app.get('/playlist/add', isLogin, MainController.getAddPlaylist);
 app.post('/playlist/add', isLogin, MainController.postAddPlaylist);
 app.get('/playlist/:id', MainController.playlistsId);
@@ -40,6 +41,7 @@ app.post('/playlist/:id/delete', isLogin, isOwner, MainController.deletePlaylist
 app.post('/playlist/:id/like', isLogin, MainController.postLikePlaylistId); // atau unlike
 app.post('/playlist/:id/add_song', isLogin, isOwner, MainController.postAddSongToPlaylist);
 app.post('/playlist/:id/delete_song/:songId', isLogin, MainController.deleteSongPlaylist);
+app.get('/songs/:songId', MainController.getSongDetail)
 
 //admin
 app.get('/songs', isLogin, isAdmin, AdminController.songs)
