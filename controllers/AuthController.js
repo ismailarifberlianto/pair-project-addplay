@@ -5,7 +5,14 @@ const bcrypt = require('bcryptjs');
 class AuthController{
     static async getSignup(req, res){
         try {
-            res.render('auth/signup')
+            let {errorMessage} = req.query
+            // console.log(errorMessage, "error...");
+            if(errorMessage && errorMessage.length > 0){
+                errorMessage = errorMessage.split(",").join(". ") + ".";
+            } else{
+                errorMessage = undefined
+            }
+            res.render('auth/signup', {errorMessage})
         } catch (error) {
             res.send(error)
             console.log(error);
@@ -26,13 +33,25 @@ class AuthController{
             })
             res.redirect('/login')
         } catch (error) {
-            res.send(error)
-            console.log(error);
+            if(error.name === "SequelizeValidationError"){
+                let errorMessage = error.errors.map(el =>{
+                    return el.message
+                })
+                res.redirect(`/signup?errorMessage=${errorMessage}`)
+            } else{
+                res.send(error)
+            }
         }
     }
     static async getLogin(req, res){
         try {
-            res.render('auth/login')
+            let {errorMessage} = req.query
+            if(errorMessage && errorMessage.length > 0){
+                errorMessage = errorMessage.split(",").join(". ") + ".";
+            } else {
+                errorMessage = undefined
+            }
+            res.render('auth/login', {errorMessage})
         } catch (error) {
             res.send(error)
         }
@@ -45,11 +64,12 @@ class AuthController{
                 where: {email}
             })
             if(!findUser){
-                throw new Error('Email not found')
+                res.redirect('/login?errorMessage=Email not found')
             } 
             let isValid = bcrypt.compareSync(password, findUser.password)
             if(!isValid){
-                throw new Error('Wrong Password')
+                res.redirect('/login?errorMessage=Password is wrong')
+                
             }
             req.session.UserId = findUser.id
             req.session.role = findUser.role
@@ -57,7 +77,14 @@ class AuthController{
             // console.log(req.session, 'setelah logout');
             res.redirect('/')
         } catch (error) {
-            res.send(error)
+            if(error.name === "SequelizeValidationError"){
+                let errorMessage = error.errors.map(el =>{
+                    return el.message
+                })
+                res.redirect(`/signup?errorMessage=${errorMessage}`)
+            } else{
+                res.send(error)
+            }
         }
     }
     static async logoutId(req, res){
@@ -110,6 +137,7 @@ class AuthController{
             await data.update({
                 username, email, age, gender
             })
+            await findUser.update({ username })
             res.redirect(`/profile/${UserId}`)
         } catch (error) {
             res.send(error)

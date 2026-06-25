@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddPlay - Add New Song</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- RESET & VARIABLES --- */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+        
+        :root {
+            --main-sky-blue: #7cd0ff;
+            --light-sky: #e6f7ff;
+            --dark-blue: #006699;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-app: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- FORM CARD CONTAINER --- */
+        .form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            padding: 32px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+        }
+
+        /* Fixed floating X Close button */
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--dark-blue);
+            background-color: var(--light-sky);
+            border-color: var(--main-sky-blue);
+            transform: scale(1.05);
+        }
+
+        h2 {
+            font-size: 22px;
+            color: var(--dark-blue);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* --- FORM ELEMENTS --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--main-sky-blue);
+            box-shadow: 0 0 0 3px var(--light-sky);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--main-sky-blue);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #5bc0f8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-card">
+        <a href="/songs" class="close-btn" title="Cancel and go back">
+            <i class="fa-solid fa-xmark"></i>
+        </a>
+        
+        <h2><i class="fa-solid fa-circle-plus"></i> Add New Track</h2>
+        <p class="subtitle">Insert song details into master database inventory</p>
+        
+        <form action="/songs/add" method="POST">
+            
+            <div class="form-group">
+                <label for="title">Song Title</label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    name="title" 
+                    placeholder="e.g. As It Was" 
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="singer">Singer / Artist</label>
+                <input 
+                    type="text" 
+                    id="singer" 
+                    name="singer" 
+                    placeholder="e.g. Harry Styles" 
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="URL">Song URL Link</label>
+                <input 
+                    type="url" 
+                    id="url" 
+                    name="url" 
+                    placeholder="https://music.youtube.com/track/..."
+                >
+            </div>
+            
+            <button type="submit" class="btn-submit">Save Song</button>
+        </form>
+    </div>
+
+</body>
+</html>

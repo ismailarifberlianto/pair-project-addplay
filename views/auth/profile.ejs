@@ -38,6 +38,32 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border-color);
         }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #64748b; 
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            z-index: 1000; 
+        }
+        .close-btn:hover {
+            color: #006699;
+            background-color: #e6f7ff;
+            border-color: #7cd0ff; 
+            transform: scale(1.05);
+        }
         h2 {
             font-size: 24px;
             font-weight: 600;
@@ -117,9 +143,13 @@
             background-color: var(--light-sky);
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
+        <a href="/" class="close-btn" title="Cancel and go back to Home">
+            <i class="fa-solid fa-xmark"></i>
+        </a>
         <!-- <%= JSON.stringify(findUser) %> -->
         <div class="profile-avatar">
             <%= (findUser.username && findUser.Profile.username) ? findUser.Profile.username.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'U' %>

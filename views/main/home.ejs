@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AddPlay - Your Playlists</title>
-    <!-- Font Awesome for beautiful minimalist icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- RESET & VARIABLES --- */
         * {
             margin: 0;
             padding: 0;
@@ -62,10 +61,31 @@
             color: var(--main-sky-blue);
         }
 
+        .nav-item.admin-badge {
+            color: var(--dark-blue);
+            font-weight: 600;
+            background-color: var(--light-sky);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #7cd0ff; /* var(--main-sky-blue) */
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item.admin-badge:hover {
+            background-color: #d0f0ff; /* Sedikit lebih gelap saat di-hover */
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 102, 153, 0.1);
+        }
+
         /* --- USER MENU & PROFILE DROPDOWN --- */
         .user-menu-wrapper {
             position: relative;
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
         .user-profile-btn {
@@ -113,7 +133,7 @@
             background-color: white;
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             list-style: none;
             overflow: hidden;
             z-index: 100;
@@ -125,7 +145,8 @@
             display: block;
         }
 
-        .dropdown-item a, .dropdown-item button {
+        .dropdown-item a,
+        .dropdown-item button {
             width: 100%;
             display: flex;
             align-items: center;
@@ -141,7 +162,8 @@
             transition: background 0.2s;
         }
 
-        .dropdown-item a:hover, .dropdown-item button:hover {
+        .dropdown-item a:hover,
+        .dropdown-item button:hover {
             background-color: var(--light-sky);
             color: var(--dark-blue);
         }
@@ -150,11 +172,13 @@
             border-top: 1px solid var(--border-color);
         }
 
-        .dropdown-item.logout-border a, .dropdown-item.logout-border button {
+        .dropdown-item.logout-border a,
+        .dropdown-item.logout-border button {
             color: var(--danger-red);
         }
 
-        .dropdown-item.logout-border a:hover, .dropdown-item.logout-border button:hover {
+        .dropdown-item.logout-border a:hover,
+        .dropdown-item.logout-border button:hover {
             background-color: #fef2f2;
             color: var(--danger-red);
         }
@@ -235,6 +259,57 @@
             background-color: #5bc0f8;
         }
 
+        .search-section {
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .search-box-wrapper {
+            position: relative;
+            max-width: 400px;
+            /* Limits the search bar width so it looks elegant */
+            width: 100%;
+        }
+
+        .search-box-wrapper input {
+            width: 100%;
+            padding: 12px 16px;
+            padding-left: 44px;
+            /* Leaves space for the magnifying glass icon */
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            /* Makes it pill-shaped and modern */
+            font-size: 14px;
+            color: var(--text-main);
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        /* Focus glow effect matching your sky-blue theme */
+        .search-box-wrapper input:focus {
+            outline: none;
+            border-color: var(--main-sky-blue);
+            box-shadow: 0 0 0 3px var(--light-sky);
+        }
+
+        /* Positioning the search icon inside the input box */
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+            pointer-events: none;
+            /* Allows user clicks to pass through to the input */
+            transition: color 0.3s ease;
+        }
+
+        /* Changes icon color when the input box is active */
+        .search-box-wrapper:focus-within .search-icon {
+            color: var(--dark-blue);
+        }
+
         /* --- PLAYLIST GRID --- */
         .playlist-grid {
             display: grid;
@@ -272,6 +347,12 @@
             font-size: 48px;
         }
 
+        .playlist-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            border-radius: 10px; 
+        }
         .playlist-title {
             font-size: 16px;
             font-weight: 600;
@@ -287,10 +368,11 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
-        
+
         <!-- ================= HEADER & PROFILE NAVIGATION ================= -->
         <header class="header">
             <div class="logo">
@@ -298,21 +380,26 @@
                 <span>Addplay</span>
             </div>
 
-            <!-- Profile Dropdown Menu Wrapper -->
-            <div class="user-menu-wrapper">
+            <div class="user-menu-wrapper" style="display: flex; align-items: center; gap: 16px;">
                 <% if (findUser) { %>
-                <button class="user-profile-btn">
-                    <div class="avatar-circle">
-                        <%= findUser.Profile.username.substring(0,2).toUpperCase() %>
-                    </div>
-                    <span class="username-text">
-                        <%= findUser.Profile.username %>
-                    </span>
-                    <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: var(--text-muted);"></i>
-                </button>
+                    
+                    <% if (findUser.role === 'admin') { %>
+                        <a href="/songs" class="nav-item admin-badge" style="text-decoration: none;">
+                            <i class="fa-solid fa-music"></i> Manage Songs
+                        </a>
+                    <% } %>
 
-                <!-- Dropdown Items -->
-                <ul class="dropdown-menu">
+                    <button class="user-profile-btn">
+                        <div class="avatar-circle">
+                            <%= findUser.Profile.username.substring(0,2).toUpperCase() %>
+                        </div>
+                        <span class="username-text">
+                            <%= findUser.Profile.username %>
+                        </span>
+                        <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: var(--text-muted);"></i>
+                    </button>
+
+                    <ul class="dropdown-menu">
                         <li class="dropdown-item">
                             <a href="/profile"><i class="fa-solid fa-user"></i> Profile</a>
                         </li>
@@ -330,7 +417,7 @@
         <section class="hero-banner">
             <div class="hero-text">
                 <h1>Your Personal Music Space</h1>
-                <p>Organize, curate, and enjoy your favorite music playlists all in one clean place.</p>
+                <p>Enjoy your favorite music playlists all in one clean place.</p>
             </div>
             <div style="font-size: 40px; color: var(--dark-blue); opacity: 0.6;">
                 <i class="fa-solid fa-compact-disc"></i>
@@ -340,39 +427,59 @@
         <!-- ================= CONTROLS & NEW PLAYLIST FORM ================= -->
         <section class="section-header">
             <h2>Playlist Collection</h2>
-            
+
             <!-- Redirects directly to your dedicated add playlist page -->
-            <a href="/playlist/create" class="btn-add-playlist" style="text-decoration: none;">
+            <a href="/playlist/add" class="btn-add-playlist" style="text-decoration: none;">
                 <i class="fa-solid fa-plus"></i> Create Playlist
             </a>
         </section>
+        <form action="/" method="get">
+            <div class="search-box-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" name="search" placeholder="Search playlist by name..."
+                    value="<%= typeof search !== 'undefined' ? search : '' %>">
+                <button type="submit" style="display: none;">Search</button>
+            </div>
+        </form>
+        <br>
 
         <!-- ================= PLAYLIST GRID DISPLAY ================= -->
         <main class="playlist-grid">
-            
+
             <!-- Backend EJS Controller Loop -->
-            <% if (typeof playlists !== 'undefined' && playlists.length > 0) { %>
-                <% playlists.forEach(p => { %>
+            <% if (typeof playlists !=='undefined' && playlists.length> 0) { %>
+                <% playlists.forEach(p=> { %>
                     <a href="/playlist/<%= p.id %>" class="playlist-card">
                         <div class="playlist-cover">
-                            <i class="fa-solid fa-music"></i>
+                            <% if (p.imageUrl && p.imageUrl.trim() !== "") { %>
+                                <img src="<%= p.imageUrl %>" alt="<%= p.name %> Cover" class="playlist-img">
+                            <% } else { %>
+                                <i class="fa-solid fa-music"></i>
+                            <% } %>
                         </div>
-                        <div class="playlist-title"><%= p.name %></div>
-                        <div class="playlist-count"><%= p.songsCount || 0 %> Songs</div>
+                        <div class="playlist-title">
+                            <%= p.name %>
+                        </div>
+                        <div class="playlist-count">
+                            <%= p.songsCount || 0 %> Songs
+                        </div>
                     </a>
-                <% }) %>
-            <% } else { %>
+                    <% }) %>
+                        <% } else { %>
 
-                <!-- Fallback empty state when database has no records -->
-                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-                    <i class="fa-solid fa-folder-open" style="font-size: 48px; margin-bottom: 12px; color: #cbd5e1;"></i>
-                    <p>No playlists found. Create your first playlist above!</p>
-                </div>
+                            <!-- Fallback empty state when database has no records -->
+                            <div
+                                style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                                <i class="fa-solid fa-folder-open"
+                                    style="font-size: 48px; margin-bottom: 12px; color: #cbd5e1;"></i>
+                                <p>No playlists found. Create your first playlist above!</p>
+                            </div>
 
-            <% } %>
+                            <% } %>
 
         </main>
     </div>
 
 </body>
+
 </html>

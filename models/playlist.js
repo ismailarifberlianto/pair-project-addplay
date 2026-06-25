@@ -16,6 +16,13 @@ module.exports = (sequelize, DataTypes) => {
       Playlist.belongsToMany(models.Song, { through: 'PlaylistSongs', timestamps: false });
 
     }
+    get totalLike(){
+      return this.LikedPlaylists ? this.LikedPlaylists.length : 0
+    }
+
+    get totalSong(){
+      return this.Songs ? this.Songs.length : 0
+    }
   }
   Playlist.init({
     name: {

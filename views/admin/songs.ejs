@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddPlay - Manage Songs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- RESET & GLOBAL STYLE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        :root {
+            --main-sky-blue: #7cd0ff;
+            --light-sky: #e6f7ff;
+            --dark-blue: #006699;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-app: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --danger-red: #ef4444;
+            --warning-amber: #f59e0b;
+        }
+        body { background-color: var(--bg-app); color: var(--text-main); padding: 40px 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        /* Back Button */
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-size: 14px; margin-bottom: 24px; transition: color 0.2s; }
+        .back-link:hover { color: var(--dark-blue); }
+
+        /* --- HEADER ACTIONS SECTION --- */
+        .songs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+        .songs-header h2 { font-size: 24px; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .btn-add { padding: 10px 20px; background-color: var(--main-sky-blue); color: white; text-decoration: none; border-radius: 24px; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(124, 208, 255, 0.2); transition: all 0.2s; }
+        .btn-add:hover { background-color: #5bc0f8; transform: translateY(-1px); }
+
+        /* --- DATA TABLE CONTAINER --- */
+        .table-wrapper { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.01); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th { background-color: #f1f5f9; color: var(--text-muted); font-weight: 600; padding: 16px 20px; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
+        td { padding: 16px 20px; border-bottom: 1px solid var(--border-color); color: var(--text-main); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #fafafa; }
+
+        /* Column Specifics */
+        .col-no { width: 60px; font-weight: 600; color: var(--text-muted); text-align: center; }
+        .song-title-cell { font-weight: 600; color: var(--text-main); }
+        .song-url-cell a { color: var(--dark-blue); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; font-size: 13px; }
+        .song-url-cell a:hover { text-decoration: underline; }
+
+        /* Action Column & Buttons */
+        .actions-cell { display: flex; gap: 8px; }
+        .btn-action { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--border-color); background: white; transition: all 0.2s; }
+        .btn-edit { color: var(--warning-amber); }
+        .btn-edit:hover { background-color: #fef3c7; border-color: var(--warning-amber); }
+        .btn-delete { color: var(--danger-red); background: none; }
+        .btn-delete:hover { background-color: #fef2f2; border-color: var(--danger-red); }
+
+        /* Empty State */
+        .empty-state { text-align: center; padding: 48px; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="/" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+
+        <header class="songs-header">
+            <h2><i class="fa-solid fa-music" style="color: var(--dark-blue);"></i> Track Management</h2>
+            <a href="/songs/add" class="btn-add">
+                <i class="fa-solid fa-plus"></i> Add Song
+            </a>
+        </header>
+
+        <main class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">No</th>
+                        <th>Title</th>
+                        <th>Singer</th>
+                        <th>URL Path</th>
+                        <th style="width: 150px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (typeof data !== 'undefined' && data.length > 0) { %>
+                        <% data.forEach((song, index) => { %>
+                            <tr>
+                                <td class="col-no"><%= index + 1 %></td>
+                                <td class="song-title-cell"><%= song.title %></td>
+                                <td><%= song.singer || 'Unknown Artist' %></td>
+                                <td class="song-url-cell">
+                                    <% if (song.url) { %>
+                                        <a href="<%= song.url %>" target="_blank">
+                                            <i class="fa-solid fa-link"></i> Listen Link
+                                        </a>
+                                    <% } else { %>
+                                        <span style="color: var(--text-muted); font-style: italic;">No URL attached</span>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a href="/songs/<%= song.id %>/edit" class="btn-action btn-edit" title="Edit song info">
+                                            <i class="fa-solid fa-pen"></i> Edit
+                                        </a>
+                                        
+                                        <form action="/songs/<%= song.id %>/delete" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn-action btn-delete" onclick="return confirm('Are you sure you want to permanently delete this track from master database?')">
+                                                <i class="fa-solid fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                <i class="fa-solid fa-compact-disc fa-spin" style="font-size: 36px; margin-bottom: 12px; display:block; color:#cbd5e1; --fa-animation-duration: 4s;"></i>
+                                No master tracks available. Click "Add Song" to expand the music inventory.
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+</body>
+</html>
