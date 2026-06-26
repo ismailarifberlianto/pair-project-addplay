@@ -54,7 +54,7 @@ class MainController{
             res.render('main/addplaylist', {errorMessage})
         } catch (error) {
             res.send(error)
-            console.log(error);
+            // console.log(error);
         }
     }
     static async postAddPlaylist(req, res){
@@ -221,7 +221,7 @@ class MainController{
 
         } catch (error) {
             res.send(error)
-            console.log(error);
+            // console.log(error);
         }
     }
     static async deleteSongPlaylist(req, res){
@@ -277,7 +277,5 @@ class MainController{
         }
     }
 }
-
-
 
 module.exports = {MainController}

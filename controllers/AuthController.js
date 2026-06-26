@@ -16,7 +16,7 @@ class AuthController{
             res.render('auth/signup', {errorMessage})
         } catch (error) {
             res.send(error)
-            console.log(error);
+            // console.log(error);
         }
     }
     static async postSignup(req, res){
@@ -114,7 +114,7 @@ class AuthController{
             res.render(`auth/profile`, {findUser})
         } catch (error) {
             res.send(error)
-            console.log(error);
+            // console.log(error);
         }
     }
     static async getEditProfileId(req, res){
