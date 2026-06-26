@@ -25,7 +25,7 @@ function welcomeEmail(userEmail, username) {
                     Thank you for joining our community. Your account has been successfully created. Now you can craft your own personalized music playlists and manage your favorite tracks seamlessly.
                 </p>
                 <div style="margin: 24px 0; text-align: center;">
-                    <a href="http://localhost:3000/login" style="background-color: #7cd0ff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 20px; font-weight: 600; display: inline-block;">
+                    <a href="http://localhost:3013/login" style="background-color: #7cd0ff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 20px; font-weight: 600; display: inline-block;">
                         Get Started & Login
                     </a>
                 </div>
