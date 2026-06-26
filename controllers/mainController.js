@@ -17,7 +17,7 @@ class MainController{
             const {UserId} = req.session
             // console.log(UserId, 'userId');
             let {errorMessage, successMessage} = req.query
-
+            console.log('successMessage:', successMessage)  
             let findUser = null
             if(UserId){
                 findUser = await User.findOne({
@@ -32,7 +32,12 @@ class MainController{
             } else{
                 errorMessage = undefined
             }
-            res.render('main/home', {findUser, playlists, search, createAt, errorMessage, successMessage: successMessage || undefined})
+            if(successMessage && successMessage.length > 0){
+                successMessage = successMessage
+            } else {
+                successMessage = undefined
+            }
+            res.render('main/home', {findUser, playlists, search, createAt, errorMessage, successMessage})
             // console.log(findUser ? 'ada' : 'Null', 'findUser');
         } catch (error) {
             res.send(error)
@@ -56,7 +61,6 @@ class MainController{
         try {
             const {name, imageUrl, description} = req.body
             const {UserId} = req.session
-            let {errorMessage} = req.query
             // console.log(errorMessage, "error...");
             await Playlist.create({
                 name, imageUrl, description, UserId
@@ -77,11 +81,11 @@ class MainController{
         try {
             const {id} = req.params
             const {UserId} = req.session
-            let findUser = null
             let playlistId = await Playlist.findOne({
                 where: {id: id},
                 include: [Song, User]
             })
+            let findUser = null
             if(UserId){
                 findUser = await User.findByPk(UserId)
             }
@@ -89,10 +93,16 @@ class MainController{
             let totalLike = await LikedPlaylist.count({
                 where: { PlaylistId: id }
             })
-            res.render('main/playlistdetail', {playlistId, currentUser: findUser, allSongs, totalLike})
+            let {errorMessage} = req.query
+            if(errorMessage && errorMessage.length > 0){
+                errorMessage = errorMessage.split(",").join(". ") + ".";
+            } else{
+                errorMessage = undefined
+            }
+            res.render('main/playlistdetail', {playlistId, currentUser: findUser, allSongs, totalLike, errorMessage})
         } catch (error) {
             res.send(error)
-            console.log(error);
+            // console.log(error);
         }
     }
     static async getEditPlaylistId(req, res){
@@ -146,11 +156,11 @@ class MainController{
                     return findPlay.destroy();
                 })
                 .then(() => {
-                    res.redirect(`/?successMessage=Playlist "${playlistName}" has been deleted`);
+                    res.redirect(`/addplay?successMessage=Playlist '${playlistName}' has been deleted`);
                 })
                 .catch((error) => {
                     if (error.message === "PlaylistNotFound") {
-                        res.redirect('/?errorMessage=Playlist tidak ditemukan');
+                        res.redirect('/addplay?errorMessage=Playlist tidak ditemukan');
                     } else {
                         res.send(error);
                     }

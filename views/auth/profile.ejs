@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Pengguna</title>
+    <title>Profile</title>
     <style>
         * {
             margin: 0;
@@ -155,7 +155,7 @@
             <%= (findUser.username && findUser.Profile.username) ? findUser.Profile.username.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'U' %>
         </div>
         <h2><%= findUser.username ? findUser.Profile.username : 'Username' %></h2>
-        <p class="subtitle">Profil Pengguna</p>
+        <p class="subtitle">Username</p>
         
         <div class="profile-info">
             <div class="profile-info-item">

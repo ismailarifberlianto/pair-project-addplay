@@ -16,6 +16,14 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Playlist);
       User.belongsToMany(models.Playlist, { through: 'LikedPlaylists', timestamps: false });
     }
+
+    static async findOneUser(UserId) {
+      let findUser = await User.findOne({
+        include: sequelize.models.Profile,
+        where: { id: UserId }
+      })
+      return findUser
+    }
   }
   User.init({
     username: DataTypes.STRING,
@@ -57,7 +65,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'User',
   });
   User.beforeCreate((user) => {
-    if(!user.role){
+    if (!user.role) {
       user.role = 'user'
     }
     user.password = bcrypt.hashSync(user.password, 10)

@@ -15,6 +15,7 @@ class AdminController{
             res.render('admin/addsong')
         } catch (error) {
             res.send(error)
+            console.log(error);
         }
     }
     static async postAddSong(req, res){
@@ -36,7 +37,7 @@ class AdminController{
             res.render('admin/editsong', {data})
         } catch (error) {
             res.send(error)
-            console.log(error);
+            // console.log(error);
         }
     }
     static async postEditSong(req, res){

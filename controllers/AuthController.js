@@ -1,6 +1,7 @@
 const { Op, where } = require("sequelize")
 const {User, Profile} = require('../models');
 const bcrypt = require('bcryptjs');
+const welcomeEmail = require("../helper/mailer");
 
 class AuthController{
     static async getSignup(req, res){
@@ -25,13 +26,16 @@ class AuthController{
             let account = await Profile.create({
                 username, email, age, gender
             })
-            await User.create({
+            let user = await User.create({
                 username,
                 email,
                 password,
                 ProfileId: account.id
             })
-            res.redirect('/login')
+            welcomeEmail(email, username)
+                .then(info => console.log('Email successfully sent:', info.messageId))
+                .catch(err => console.log('Email failed to send:', err));
+            res.redirect('/login?successMessage=Registration successful! Please check your email.')
         } catch (error) {
             if(error.name === "SequelizeValidationError"){
                 let errorMessage = error.errors.map(el =>{
@@ -45,13 +49,13 @@ class AuthController{
     }
     static async getLogin(req, res){
         try {
-            let {errorMessage} = req.query
+            let {errorMessage, successMessage} = req.query
             if(errorMessage && errorMessage.length > 0){
                 errorMessage = errorMessage.split(",").join(". ") + ".";
             } else {
                 errorMessage = undefined
             }
-            res.render('auth/login', {errorMessage})
+            res.render('auth/login', {errorMessage, successMessage: successMessage || undefined})
         } catch (error) {
             res.send(error)
         }
@@ -106,10 +110,7 @@ class AuthController{
     static async getProfileId(req, res){
         try {
             const {UserId} = req.session
-            let findUser = await User.findOne({
-                include: Profile,
-                where: {id: UserId} 
-            })
+            let findUser = await User.findOneUser(UserId)
             res.render(`auth/profile`, {findUser})
         } catch (error) {
             res.send(error)

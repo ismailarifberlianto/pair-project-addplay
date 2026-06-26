@@ -41,15 +41,16 @@ app.post('/playlist/:id/delete', isLogin, isOwner, MainController.deletePlaylist
 app.post('/playlist/:id/like', isLogin, MainController.postLikePlaylistId); // atau unlike
 app.post('/playlist/:id/add_song', isLogin, isOwner, MainController.postAddSongToPlaylist);
 app.post('/playlist/:id/delete_song/:songId', isLogin, MainController.deleteSongPlaylist);
-app.get('/songs/:songId', MainController.getSongDetail)
 
 //admin
-app.get('/songs', isLogin, isAdmin, AdminController.songs)
-app.get('/songs/add', isLogin, isAdmin, AdminController.getAddSong)
-app.post('/songs/add', isLogin, isAdmin, AdminController.postAddSong)
-app.get('/songs/:id/edit', isLogin, isAdmin, AdminController.getEditSong)
-app.post('/songs/:id/edit', isLogin, isAdmin, AdminController.postEditSong)
-app.post('/songs/:id/delete', isLogin, isAdmin, AdminController.deleteSongId)
+app.get('/songs', isLogin, isAdmin, AdminController.songs);
+app.get('/songs/add', isLogin, isAdmin, AdminController.getAddSong);
+app.post('/songs/add', isLogin, isAdmin, AdminController.postAddSong);
+app.get('/songs/:id/edit', isLogin, isAdmin, AdminController.getEditSong);
+app.post('/songs/:id/edit', isLogin, isAdmin, AdminController.postEditSong);
+app.post('/songs/:id/delete', isLogin, isAdmin, AdminController.deleteSongId);
+
+app.get('/songs/:songId', MainController.getSongDetail);
 
 app.listen(port, () => {
   console.log(`Our lucky numbers is ${port}`);

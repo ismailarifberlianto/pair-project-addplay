@@ -157,7 +157,6 @@
             line-height: 1.4;
         }
 
-        
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -167,6 +166,25 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+        .success-alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #f0fdf4; 
+            border: 1px solid #bbf7d0;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+        .success-icon {
+            color: #16a34a; 
+            font-size: 16px;
+        }
+        .success-text {
+            font-size: 14px;
+            color: #16a34a;
+            font-weight: 500;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -178,6 +196,13 @@
     <div class="container">
         <h2 style="color: var(--dark-blue);">Addplay</h2>
         <p class="subtitle">Please log in to your account</p>
+        <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+            <div class="success-alert">
+                <i class="fa-solid fa-circle-check success-icon"></i>
+                <div class="success-text"><%= successMessage %></div>
+            </div>
+        <% } %>
+    
         <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
             <div class="error-alert">
                 <i class="fa-solid fa-triangle-exclamation error-icon"></i>
