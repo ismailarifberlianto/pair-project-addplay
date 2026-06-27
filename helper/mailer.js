@@ -14,13 +14,13 @@ const transporter = nodemailer.createTransport({
 
 function welcomeEmail(userEmail, username) {
     const mailOptions = {
-        from: '"AddPlay Team" <ismail.aberlianto@gmail.com>', // Nama Pengirim & Email
+        from: '"Addplay Team" <ismail.aberlianto@gmail.com>', // Nama Pengirim & Email
         to: userEmail,                                // Email tujuan 
         subject: 'Welcome to Addplay Web App! 🎵',            // Subjek Email
 
         html: `
             <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px;">
-                <h2 style="color: #006699;">Welcome to AddPlay, ${username}! 🎉</h2>
+                <h2 style="color: #006699;">Welcome to Addplay, ${username}! 🎉</h2>
                 <p style="color: #1e293b; font-size: 14px; line-height: 1.6;">
                     Thank you for joining our community. Your account has been successfully created. Now you can craft your own personalized music playlists and manage your favorite tracks seamlessly.
                 </p>
