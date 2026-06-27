@@ -133,11 +133,21 @@ class AuthController{
         try {
             const {UserId} = req.session
             const {username, email, age, gender} = req.body
-            let findUser = await User.findByPk(UserId)
-            let data = await Profile.findByPk(findUser.ProfileId)
-            await data.update({
-                username, email, age, gender
+            let findUser = await User.findOne({
+                include: Profile,
+                where: {id: UserId} 
             })
+            if (findUser.Profile) {
+                await findUser.Profile.update({
+                    username, 
+                    email, 
+                    age, 
+                    gender
+                });
+            } else {
+                let newProfile = await Profile.create({ username, email, age, gender });
+                await findUser.update({ ProfileId: newProfile.id });
+            }
             await findUser.update({ username })
             res.redirect(`/profile/${UserId}`)
         } catch (error) {
