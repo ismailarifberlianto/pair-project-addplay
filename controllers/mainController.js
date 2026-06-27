@@ -243,6 +243,7 @@ class MainController{
     static async getSongDetail(req, res) {
         try {
             const { songId } = req.params;
+            const { playlistId } = req.query
             const song = await Song.findByPk(songId, {
                 include: Playlist
             });
@@ -271,7 +272,7 @@ class MainController{
             const embedYoutubeUrl = getEmbedUrl(song.url);
 
             // Render halaman detail sambil mengirim data lagu dan URL embed-nya
-            res.render('main/songdetail', { song, embedYoutubeUrl });
+            res.render('main/songdetail', { song, embedYoutubeUrl, playlistId });
         } catch (error) {
             res.send(error);
         }
