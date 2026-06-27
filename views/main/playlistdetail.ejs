@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addplay - <%= playlistId.name %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        :root {
+            --main-sky-blue: #7cd0ff;
+            --light-sky: #e6f7ff;
+            --dark-blue: #006699;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-app: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --danger-red: #ef4444;
+        }
+        body { background-color: var(--bg-app); color: var(--text-main); padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        /* Back Button */
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-size: 14px; margin-bottom: 24px; transition: color 0.2s; }
+        .back-link:hover { color: var(--dark-blue); }
+
+        /* --- PLAYLIST HEADER PROFILE --- */
+        .playlist-header { display: flex; gap: 32px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 32px; border-radius: 16px; margin-bottom: 32px; align-items: center; position: relative;}
+        .playlist-cover-art { width: 180px; height: 180px; border-radius: 12px; object-fit: cover; background-color: var(--light-sky); border: 1px solid var(--border-color); }
+        .playlist-info { flex: 1; }
+        .playlist-info h1 { font-size: 28px; color: var(--text-main); margin-bottom: 8px; }
+        .playlist-meta { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; display: flex; gap: 16px; }
+        .playlist-meta span strong { color: var(--text-main); }
+        .playlist-desc { font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px; }
+        
+        /* Action Buttons Group */
+        .actions-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .btn-action { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-color); background: white; color: var(--text-main); transition: all 0.2s; }
+        .btn-action:hover { border-color: var(--main-sky-blue); background-color: var(--light-sky); }
+        
+        /* Like button wrapper design styling */
+        .like-form-wrapper { display: flex; align-items: center; gap: 8px; }
+        .like-count { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+        .btn-like { border-color: #ffb3cc; color: #ef4444; }
+        .btn-like:hover { background-color: #fff1f5; border-color: #ef4444; }
+        
+        .btn-danger { color: var(--danger-red); background: none; border: 1px solid var(--border-color); }
+        .btn-danger:hover { background-color: #fef2f2; border-color: var(--danger-red); }
+
+        /* --- INTERACTION TOOLS BLOCK --- */
+        .tools-block { background: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; }
+        .tools-block h3 { font-size: 15px; font-weight: 600; }
+        .add-song-form { display: flex; gap: 10px; }
+        select { padding: 8px 16px; border: 1px solid var(--border-color); border-radius: 20px; font-size: 13px; color: var(--text-main); outline: none; background: #fff; cursor: pointer; min-width: 200px; }
+        select:focus { border-color: var(--main-sky-blue); }
+        .btn-add-song { padding: 8px 16px; background-color: var(--main-sky-blue); color: white; border: none; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-add-song:hover { background-color: #5bc0f8; }
+
+        /* --- SONGS LIST TRACKLIST --- */
+        .tracklist { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; list-style: none; }
+        .track-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border-color); transition: background 0.2s; }
+        .track-item:last-child { border-bottom: none; }
+        .track-item:hover { background-color: #fafafa; }
+        .track-details { display: flex; align-items: center; gap: 16px; }
+        .track-icon { width: 36px; height: 36px; background-color: var(--light-sky); color: var(--dark-blue); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; }
+        .track-title { font-weight: 600; font-size: 14px; color: var(--text-main); }
+        .track-artist { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        
+        .btn-delete-track { background: none; border: none; color: #cbd5e1; cursor: pointer; font-size: 16px; transition: color 0.2s; padding: 4px; display: inline-flex; align-items: center; justify-content: center; }
+        .track-item:hover .btn-delete-track { color: var(--danger-red); }
+        .empty-state { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
+        .error-alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #fef2f2; 
+            border: 1px solid #fee2e2;
+            border-left: 4px solid #ef4444; 
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px; 
+            animation: fadeIn 0.3s ease-in-out; 
+        }
+
+        .error-icon {
+            color: #ef4444;
+            font-size: 16px;
+            flex-shrink: 0;  
+        }
+
+        .error-text {
+            color: #991b1b;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="/" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+
+        <header class="playlist-header">
+            <img src="<%= playlistId.imageUrl || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300' %>" alt="Cover" class="playlist-cover-art">
+            <div class="playlist-info">
+                <h1><%= playlistId.name %></h1>
+                
+                <div class="playlist-meta">
+                    <span>By <strong><%= playlistId.User ? playlistId.User.username : 'Unknown' %></strong></span>
+                    <span>• <strong><%= playlistId.Songs ? playlistId.Songs.length : 0 %></strong> Songs</span>
+                </div>
+                
+                <p class="playlist-desc"><%= playlistId.description || 'No description provided for this playlist.' %></p>
+                
+                <div class="actions-bar">
+                    <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+                        <form action="/playlist/<%= playlistId.id %>/like" method="POST" class="like-form-wrapper">
+                            <button type="submit" class="btn-action btn-like">
+                                <i class="fa-regular fa-heart"></i> Like
+                            </button>
+                            <span class="like-count"><%= (typeof totalLike !== 'undefined') ? totalLike : 0 %> Likes</span>
+                        </form>
+                    <% } else { %>
+                        <div class="like-form-wrapper">
+                            <a href="/login?errorMessage=Please log in to like this playlist" class="btn-action btn-like" style="text-decoration: none;">
+                                <i class="fa-regular fa-heart"></i> Like
+                            </a>
+                            <span class="like-count"><%= (typeof totalLike !== 'undefined') ? totalLike : 0 %> Likes</span>
+                        </div>
+                    <% } %>
+
+                    <% if (typeof currentUser !== 'undefined' && currentUser && (currentUser.id === playlistId.UserId || currentUser.role === 'admin')) { %>
+                        <a href="/playlist/<%= playlistId.id %>/edit" class="btn-action">
+                            <i class="fa-solid fa-pen"></i> Edit
+                        </a>
+                        <form action="/playlist/<%= playlistId.id %>/delete" method="POST" style="display:inline;">
+                            <button type="submit" class="btn-action btn-danger" onclick="return confirm('Delete this playlist?')">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    <% } %>
+                </div>
+            </div>
+        </header>
+
+        <section class="tools-block">
+            <h3>Add Song to Playlist</h3>
+            <form action="/playlist/<%= playlistId.id %>/add_song" method="POST" class="add-song-form">
+                <select name="SongId" required>
+                    <option value="" disabled selected hidden>Choose a song...</option>
+                    <% if (typeof allSongs !== 'undefined' && allSongs) { %>
+                        <% allSongs.forEach(song => { %>
+                            <option value="<%= song.id %>"><%= song.title %> - <%= song.singer %></option>
+                        <% }) %>
+                    <% } %>
+                </select>
+                <button type="submit" class="btn-add-song">
+                    <i class="fa-solid fa-plus"></i> Add
+                </button>
+            </form>
+        </section>
+        <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+            <div class="error-alert">
+                <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+                <div class="error-text"><%= errorMessage %></div>
+            </div>
+        <% } %>
+
+        <main>
+            <ul class="tracklist">
+                <% if (playlistId.Songs && playlistId.Songs.length > 0) { %>
+                    <% playlistId.Songs.forEach((song, index) => { %>
+                        <li class="track-item">
+                            <div class="track-details">
+                                <a href="/songs/<%= song.id %>" class="track-icon-link" title="View Song Details">
+                                    <div class="track-icon">
+                                        <i class="fa-solid fa-play" style="margin-left: 2px; font-size: 11px;"></i>
+                                    </div>
+                                </a>
+                                <div>
+                                    <div class="track-title">
+                                        <a href="/songs/<%= song.id %>" style="text-decoration: none; color: inherit;"><%= song.title %></a>
+                                    </div>
+                                    <div class="track-artist"><%= song.singer || 'Unknown Artist' %></div>
+                                </div>
+                            </div>
+                            <% if (typeof currentUser !== 'undefined' && currentUser && (currentUser.id === playlistId.UserId || currentUser.role === 'admin')) { %>
+                                <form action="/playlist/<%= playlistId.id %>/delete_song/<%= song.id %>" method="POST">
+                                    <button type="submit" class="btn-delete-track" title="Remove track" onclick="return confirm('Remove this song from playlist?')">
+                                        <i class="fa-solid fa-circle-minus"></i>
+                                    </button>
+                                </form>
+                            <% } %>
+                        </li>
+                    <% }) %>
+                <% } else { %>
+                    <li class="empty-state">
+                        <i class="fa-solid fa-music" style="font-size: 32px; margin-bottom: 12px; display:block; color:#cbd5e1;"></i>
+                        This playlist has no songs yet.
+                    </li>
+                <% } %>
+            </ul>
+        </main>
+    </div>
+
+</body>
+</html>

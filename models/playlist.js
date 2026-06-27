@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const { Op, where } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class Playlist extends Model {
     /**
@@ -12,9 +14,34 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Playlist.belongsTo(models.User);
-      Playlist.belongsToMany(models.User, { through: 'LikedPlaylists', timestamps: false });
-      Playlist.belongsToMany(models.Song, { through: 'PlaylistSongs', timestamps: false });
+      Playlist.belongsToMany(models.User, { through: 'LikedPlaylists' });
+      Playlist.belongsToMany(models.Song, { through: 'PlaylistSongs' });
 
+    }
+
+    static async findWithDetails(search) {
+      let option = {
+        include: [sequelize.models.Song, sequelize.models.User]
+      }
+
+      if (search) {
+        option.where = {
+          name: {
+            [Op.iLike]: `%${search}%`
+          }
+        }
+      }
+
+      let data = await Playlist.findAll(option)
+      return data
+    }
+
+    get totalLike() {
+      return this.LikedPlaylists ? this.LikedPlaylists.length : 0
+    }
+
+    get totalSong() {
+      return this.Songs ? this.Songs.length : 0
     }
   }
   Playlist.init({

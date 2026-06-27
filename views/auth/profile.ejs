@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        :root {
+            --main-sky-blue: #7cd0ff;
+            --light-sky: #e6f7ff;
+            --dark-blue: #006699;
+            --text-color: #333333;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #64748b; 
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            z-index: 1000; 
+        }
+        .close-btn:hover {
+            color: #006699;
+            background-color: #e6f7ff;
+            border-color: #7cd0ff; 
+            transform: scale(1.05);
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e293b;
+            text-align: center;
+        }
+        p.subtitle {
+            font-size: 14px;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            background-color: var(--light-sky);
+            color: var(--dark-blue);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: 600;
+            margin: 0 auto 20px auto;
+            border: 2px solid var(--main-sky-blue);
+        }
+        .profile-info {
+            background-color: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .profile-info-item {
+            margin-bottom: 12px;
+        }
+        .profile-info-item:last-child {
+            margin-bottom: 0;
+        }
+        .profile-info-item span.label {
+            font-size: 12px;
+            color: #64748b;
+            display: block;
+        }
+        .profile-info-item span.value {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1e293b;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--main-sky-blue);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        .btn:hover {
+            background-color: #5bc0f8;
+        }
+        .btn-outline {
+            background-color: transparent;
+            color: var(--dark-blue);
+            border: 1px solid var(--main-sky-blue);
+            margin-top: 12px;
+        }
+        .btn-outline:hover {
+            background-color: var(--light-sky);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="close-btn" title="Cancel and go back to Home">
+            <i class="fa-solid fa-xmark"></i>
+        </a>
+        <!-- <%= JSON.stringify(findUser) %> -->
+        <div class="profile-avatar">
+            <%= (findUser.username && findUser.Profile.username) ? findUser.Profile.username.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'U' %>
+        </div>
+        <h2><%= findUser.username ? findUser.Profile.username : 'Username' %></h2>
+        <p class="subtitle">Username</p>
+        
+        <div class="profile-info">
+            <div class="profile-info-item">
+                <span class="label">Email</span>
+                <span class="value"><%= findUser.username ? findUser.Profile.email : 'email@domain.com' %></span>
+            </div>
+        </div>
+
+        <div class="profile-info">
+            <div class="profile-info-item">
+                <span class="label">Age</span>
+                <span class="value"><%= findUser.username ? findUser.Profile.age : 'email@domain.com' %></span>
+            </div>
+        </div>
+
+        <div class="profile-info">
+            <div class="profile-info-item">
+                <span class="label">Gender</span>
+                <span class="value"><%= findUser.username ? findUser.Profile.gender: 'email@domain.com' %></span>
+            </div>
+        </div>
+
+        <a href="/profile/<%= findUser.id %>/edit" class="btn">Edit Profil</a>
+        <a href="/logout" class="btn btn-outline">Keluar</a>
+    </div>
+</body>
+</html>

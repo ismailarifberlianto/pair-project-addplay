@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        :root {
+            --main-sky-blue: #7cd0ff;
+            --light-sky: #e6f7ff;
+            --dark-blue: #006699;
+            --text-color: #333333;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #64748b; 
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            z-index: 1000; 
+        }
+        .close-btn:hover {
+            color: #006699;
+            background-color: #e6f7ff;
+            border-color: #7cd0ff; 
+            transform: scale(1.05);
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e293b;
+            text-align: center;
+        }
+        p.subtitle {
+            font-size: 14px;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #475569;
+        }
+        input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background-color: #fdfdfd;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--main-sky-blue);
+            box-shadow: 0 0 0 4px var(--light-sky);
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--main-sky-blue);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #5bc0f8;
+        }
+        .footer-text {
+            font-size: 13px;
+            text-align: center;
+            margin-top: 20px;
+            color: #64748b;
+        }
+        .footer-text a {
+            color: var(--dark-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+        .select-wrapper {
+        position: relative;
+        width: 100%;
+        }
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            padding-right: 40px; /* Memberi ruang untuk kustom ikon panah */
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-color);
+            background-color: #fdfdfd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--main-sky-blue);
+            box-shadow: 0 0 0 4px var(--light-sky);
+        }
+
+        .select-wrapper::after {
+            content: "";
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid #64748b; 
+            pointer-events: none; 
+            transition: transform 0.3s ease;
+        }
+
+        select option {
+            color: var(--text-color);
+            background-color: #ffffff;
+        }
+        .error-alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #fef2f2; 
+            border: 1px solid #fee2e2;
+            border-left: 4px solid #ef4444; 
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px; 
+            animation: fadeIn 0.3s ease-in-out; 
+        }
+
+        .error-icon {
+            color: #ef4444;
+            font-size: 16px;
+            flex-shrink: 0;  
+        }
+
+        .error-text {
+            color: #991b1b;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <a href="/" class="close-btn" title="Cancel and go back to Home">
+        <i class="fa-solid fa-xmark"></i>
+    </a>
+    <div class="container">
+        <h2>Sign Up</h2>
+        <p class="subtitle">Enjoy your music on <a href="/" style="color: var(--dark-blue); text-decoration: none; font-weight: 500;">Addplay</a></p>
+        <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+            <div class="error-alert">
+                <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+                <div class="error-text"><%= errorMessage %></div>
+            </div>
+        <% } %>
+        <form action="/signup" method="post">
+            <div class="form-group">
+                <label for="name">Username</label>
+                <input type="text" id="name" name="username" placeholder="username" >
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="name@email.com" >
+            </div>
+            <div class="form-group">
+                <label for="name">Age</label>
+                <input type="number" id="name" name="age" placeholder="age" >
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <div class="select-wrapper">
+                    <select id="gender" name="gender" >
+                        <option value="" disabled selected hidden>select...</option>
+                        <% ['Male', 'Female'].forEach(el => { %>
+                            <option value="<%= el %>"><%= el %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="min 8 characters" >
+            </div>
+            <button type="submit" class="btn">Sign Up</button>
+        </form>
+        
+        <div class="footer-text">
+            Already have an account? <a href="/login">Log In</a>
+        </div>
+    </div>
+</body>
+</html>
